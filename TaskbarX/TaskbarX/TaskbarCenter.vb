@@ -17,15 +17,11 @@ Public Class TaskbarCenter
 
     Public Shared windowHandles As ArrayList = New ArrayList()
 
-    Public Shared trayfixed As Boolean
-    Public Shared setposhwnd As IntPtr
-    Public Shared setpospos As Integer
-    Public Shared setposori As String
-
     Public Shared initposcalc As String
     Public Shared initposcalcready As Boolean
 
     Public Shared isanimating As Boolean
+    Private Shared ReadOnly ProjectedWidths As New Dictionary(Of IntPtr, Integer)()
 
     Public Shared UserPref As New Microsoft.Win32.UserPreferenceChangedEventHandler(AddressOf HandlePrefChange)
 
@@ -123,28 +119,9 @@ Public Class TaskbarCenter
         Return rect
     End Function
 
-    Public Shared Sub SetPos()
-        If setposori = "H" Then
-            Do
-                Win32.SetWindowPos(setposhwnd, IntPtr.Zero, setpospos, 0, 0, 0, Win32.SWP_NOSIZE Or Win32.SWP_ASYNCWINDOWPOS Or Win32.SWP_NOACTIVATE Or Win32.SWP_NOZORDER Or Win32.SWP_NOSENDCHANGING)
-                If isanimating = True Then
-                    Exit Do
-                End If
-            Loop Until trayfixed = True
-        Else
-            Do
-                Win32.SetWindowPos(setposhwnd, IntPtr.Zero, 0, setpospos, 0, 0, Win32.SWP_NOSIZE Or Win32.SWP_ASYNCWINDOWPOS Or Win32.SWP_NOACTIVATE Or Win32.SWP_NOZORDER Or Win32.SWP_NOSENDCHANGING)
-                If isanimating = True Then
-                    Exit Do
-                End If
-            Loop Until trayfixed = True
-        End If
-    End Sub
-
     Public Shared Sub Animate(ByVal hwnd As IntPtr, ByVal oldpos As Integer, ByVal orient As String, ByVal easing As EasingDelegate, ByVal valueToReach As Integer, ByVal duration As Integer, ByVal isPrimary As Boolean, ByVal width As Integer)
         Try
-            Dim t1 As Thread = New Thread(Sub() TaskbarAnimate.Animate(hwnd, oldpos, orient, easing, valueToReach, duration, isPrimary, width))
-            t1.Start()
+            TaskbarAnimate.Animate(hwnd, oldpos, orient, easing, valueToReach, duration, isPrimary, width)
         Catch ex As Exception
 
             Console.WriteLine("@Animation Call | " & ex.Message)
@@ -273,6 +250,12 @@ Public Class TaskbarCenter
             GetActiveWindows()
 
             Dim Taskbars As New ArrayList
+            Dim oldresults As String = Nothing
+            Dim previousExtents As New Dictionary(Of IntPtr, Integer)()
+            Dim previousChildCounts As New Dictionary(Of IntPtr, Integer)()
+            Dim previousIconSizes As New Dictionary(Of IntPtr, Integer)()
+            Dim projectionStarted As New Dictionary(Of IntPtr, Long)()
+            ProjectedWidths.Clear()
 
 
 
@@ -344,8 +327,8 @@ Public Class TaskbarCenter
                 End If
 
                 If MSTaskListWClass = Nothing Then
-                    MessageBox.Show("TaskbarX: Could not find the handle of the taskbar. Your current version or build of Windows may not be supported.")
-                    End
+                    MessageBox.Show("TaskbarZ: Could not find the handle of the taskbar. Your current version or build of Windows may not be supported.")
+                    Environment.Exit(1)
                 End If
 
                 Taskbars.Add(MSTaskListWClass)
@@ -369,7 +352,7 @@ Public Class TaskbarCenter
                 Try
 
                     Dim results As String = Nothing
-                    Dim oldresults As String
+                    Dim allTaskbarsValid As Boolean = True
 
                     If Not Settings.SkipResolution = 0 Then
                         If Screen.PrimaryScreen.Bounds.Width = Settings.SkipResolution Then
@@ -401,7 +384,7 @@ Public Class TaskbarCenter
                         If activewindowsize.Top = curmonx.Bounds.Top And activewindowsize.Bottom = curmonx.Bounds.Bottom And activewindowsize.Left = curmonx.Bounds.Left And activewindowsize.Right = curmonx.Bounds.Right Then
                             Console.WriteLine("Fullscreen App detected " & activewindowsize.Bottom & "," & activewindowsize.Top & "," & activewindowsize.Left & "," & activewindowsize.Right)
 
-                            ''Main.Toaster("Fullscreen App detected... TaskbarX will now be disabled.")
+                            ''Main.Toaster("Fullscreen App detected... TaskbarZ will now be disabled.")
                             ''  Main.ResetTaskbarStyle()
                             ''RevertToZero()
 
@@ -415,7 +398,7 @@ Public Class TaskbarCenter
                             Loop While activewindowsize.Top = curmonx.Bounds.Top And activewindowsize.Bottom = curmonx.Bounds.Bottom And activewindowsize.Left = curmonx.Bounds.Left And activewindowsize.Right = curmonx.Bounds.Right
                             Console.WriteLine("Fullscreen App deactivated")
 
-                            ''  Main.Toaster("Fullscreen App closed or minimized... TaskbarX will now be enabled.")
+                            ''  Main.Toaster("Fullscreen App closed or minimized... TaskbarZ will now be enabled.")
 
                             Settings.Pause = False
                         End If
@@ -430,6 +413,7 @@ Public Class TaskbarCenter
 
 
                         Dim children() As Accessibility.IAccessible = MSAA.GetAccessibleChildren(CType(TaskList, IAccessible))
+                        Dim taskListHandle As IntPtr = CType(Taskbars(i), IntPtr)
 
                         Dim TaskListPos As RectangleX = GetLocation(CType(TaskList, IAccessible), 0)
 
@@ -438,10 +422,12 @@ Public Class TaskbarCenter
                         Dim tW = TaskListPos.width
 
                         Dim LastChildPos As RectangleX
+                        Dim toolbarChildCount As Integer = 0
 
                         For Each childx As Accessibility.IAccessible In children
                             If CInt(childx.accRole(0)) = CInt(22) Then '0x16 = toolbar
-                                LastChildPos = GetLocation(childx, MSAA.GetAccessibleChildren(childx).Length)
+                                toolbarChildCount = MSAA.GetAccessibleChildren(childx).Length
+                                LastChildPos = GetLocation(childx, toolbarChildCount)
                                 Exit For
                             End If
                         Next
@@ -453,12 +439,10 @@ Public Class TaskbarCenter
                         Dim cW = LastChildPos.width
                         Dim cH = LastChildPos.height
 
-                        Try
-                            Dim testiferror = cL
-                        Catch ex As Exception
-                            'Current taskbar is empty go to next taskbar.
-                            ''Continue For
-                        End Try
+                        If toolbarChildCount = 0 OrElse tW <= 0 OrElse tH <= 0 OrElse cW <= 0 OrElse cH <= 0 Then
+                            allTaskbarsValid = False
+                            Exit For
+                        End If
 
                         Dim Orientation As String
                         Dim TaskbarCount As Integer
@@ -473,9 +457,35 @@ Public Class TaskbarCenter
 
                         'Get the end position of the last icon in the taskbar
                         If Orientation = "H" Then
-                            TaskbarCount = cL + cW
+                            TaskbarCount = cL - TaskListPos.left + cW
                         Else
-                            TaskbarCount = cT + cH
+                            TaskbarCount = cT - TaskListPos.top + cH
+                        End If
+
+                        Dim previousExtent As Integer
+                        Dim previousCount As Integer
+                        Dim previousIconSize As Integer
+                        If previousExtents.TryGetValue(taskListHandle, previousExtent) Then
+                            previousChildCounts.TryGetValue(taskListHandle, previousCount)
+                            previousIconSizes.TryGetValue(taskListHandle, previousIconSize)
+                            Dim started As Long
+                            Dim timedOut As Boolean = projectionStarted.TryGetValue(taskListHandle, started) AndAlso
+                                (Stopwatch.GetTimestamp() - started) > Stopwatch.Frequency \ 2
+                            If toolbarChildCount < previousCount OrElse timedOut Then
+                                ProjectedWidths.Remove(taskListHandle)
+                                projectionStarted.Remove(taskListHandle)
+                            ElseIf toolbarChildCount = previousCount AndAlso TaskbarCount < previousExtent AndAlso
+                                TaskbarCount >= previousExtent - previousIconSize AndAlso
+                                Not ProjectedWidths.ContainsKey(taskListHandle) AndAlso previousIconSize > 0 Then
+                                'Predict the final width as Explorer shrinks a closing button.
+                                ProjectedWidths(taskListHandle) = Math.Max(0, previousExtent - 2 * previousIconSize)
+                                projectionStarted(taskListHandle) = Stopwatch.GetTimestamp()
+                            End If
+                        End If
+                        If Not ProjectedWidths.ContainsKey(taskListHandle) Then
+                            previousExtents(taskListHandle) = TaskbarCount
+                            previousChildCounts(taskListHandle) = toolbarChildCount
+                            previousIconSizes(taskListHandle) = If(Orientation = "H", cW, cH)
                         End If
 
                         'Gets the width of the whole taskbars placeholder
@@ -486,9 +496,8 @@ Public Class TaskbarCenter
                         End If
 
                         'Put the results into a string ready to be matched for differences with last loop
-                        results = results & Orientation & TaskbarCount & TrayWndSize
+                        results = results & "|" & Orientation & ":" & TaskbarCount & ":" & TrayWndSize
 
-                        initposcalcready = True
 
                         i += 1
                     Next
@@ -496,20 +505,10 @@ Public Class TaskbarCenter
 
 
 
-                    If Not results = oldresults Then
-                        'Something has changed we can now calculate the new position for each taskbar
-
-                        initposcalcready = False
-                        initposcalc = results
-
-                        'Start the PositionCalculator
-                        Dim t3 As Thread = New Thread(AddressOf InitPositionCalculator)
-                        t3.Start()
-
+                    'Follow Explorer's changing icon width as soon as it appears.
+                    If allTaskbarsValid AndAlso results <> oldresults Then
+                        If PositionCalculator() Then oldresults = results
                     End If
-
-                    'Save current results for next loop
-                    oldresults = results
 
 
 
@@ -517,9 +516,9 @@ Public Class TaskbarCenter
 
 
                     If SystemInformation.PowerStatus.PowerLineStatus = PowerLineStatus.Offline Then
-                        Thread.Sleep(Settings.OnBatteryLoopRefreshRate)
+                        Thread.Sleep(Math.Max(10, Math.Min(Settings.OnBatteryLoopRefreshRate, 50)))
                     Else
-                        Thread.Sleep(Settings.LoopRefreshRate)
+                        Thread.Sleep(Math.Max(10, Math.Min(Settings.LoopRefreshRate, 25)))
                     End If
                 Catch ex As Exception
                     Console.WriteLine("@Looper1 | " & ex.Message)
@@ -535,6 +534,9 @@ Public Class TaskbarCenter
                         System.Threading.Thread.Sleep(1000)
                         Application.Restart()
                     End If
+
+                    'A persistent accessibility error must not turn this into a busy loop.
+                    Thread.Sleep(100)
 
                 End Try
 
@@ -569,17 +571,14 @@ Public Class TaskbarCenter
             Dim SWP_NOSENDCHANGING As UInt32 = 1024
             Dim SWP_NOZORDER As UInt32 = 4
 
+            Dim OldTrayNotifyWidth As Integer = 0
             Do
 
                 Dim RebarPos As RectangleX = GetLocation(accessible3, 0)
                 Dim TrayNotifyPos As RectangleX = GetLocation(accessible2, 0)
                 Dim TaskListPos As RectangleX = GetLocation(accessible, 0)
 
-                Win32.SendMessage(ReBarWindow32, 11, False, 0)
-                Win32.SendMessage(Win32.GetParent(Shell_TrayWnd), 11, False, 0)
-
                 Dim TrayNotifyWidth As Integer = 0
-                Dim OldTrayNotifyWidth As Integer
                 Dim TrayOrientation As String
 
                 'If the TrayNotifyWnd updates then refresh the taskbar
@@ -601,21 +600,13 @@ Public Class TaskbarCenter
 
                             Dim pos = Math.Abs((TaskListPos.left - RebarPos.left))
 
-                            trayfixed = False
-
-                            setposhwnd = MSTaskListWClass
-                            setpospos = CInt(pos)
-                            setposori = TrayOrientation
-
-                            Dim t1 As Thread = New Thread(AddressOf SetPos)
-                            t1.Start()
-
-                            Thread.Sleep(5)
-                            Win32.SendMessage(ReBarWindow32, 11, True, 0)
-                            Thread.Sleep(5)
-                            Win32.SendMessage(ReBarWindow32, 11, False, 0)
-                            Thread.Sleep(5)
-                            trayfixed = True
+                            If Not isanimating Then
+                                If TrayOrientation = "H" Then
+                                    Win32.SetWindowPos(MSTaskListWClass, IntPtr.Zero, CInt(pos), 0, 0, 0, Win32.SWP_NOSIZE Or Win32.SWP_ASYNCWINDOWPOS Or Win32.SWP_NOACTIVATE Or Win32.SWP_NOZORDER Or Win32.SWP_NOSENDCHANGING)
+                                Else
+                                    Win32.SetWindowPos(MSTaskListWClass, IntPtr.Zero, 0, CInt(pos), 0, 0, Win32.SWP_NOSIZE Or Win32.SWP_ASYNCWINDOWPOS Or Win32.SWP_NOACTIVATE Or Win32.SWP_NOZORDER Or Win32.SWP_NOSENDCHANGING)
+                                End If
+                            End If
 
                         End If
                     End If
@@ -655,7 +646,7 @@ Public Class TaskbarCenter
         End If
     End Sub
 
-    Public Shared Sub PositionCalculator()
+    Public Shared Function PositionCalculator() As Boolean
 
 
 
@@ -663,6 +654,7 @@ Public Class TaskbarCenter
             'Calculate the new positions and pass them through to the animator
 
             Dim Taskbars As New ArrayList
+            Dim allTaskbarsValid As Boolean = True
 
             'Put all Taskbars into an ArrayList based on each TrayWnd in the TrayWnds ArrayList
             For Each Taskbar In windowHandles
@@ -685,7 +677,7 @@ Public Class TaskbarCenter
                 Win32.SetWindowLong(CType(Taskbar, IntPtr), CType(Win32.GWL_EXSTYLE, Win32.WindowStyles), &H80L)
 
                 If MSTaskListWClass = Nothing Then
-                    Console.WriteLine("TaskbarX: Could not find the handle of the taskbar. Restarting...")
+                    Console.WriteLine("TaskbarZ: Could not find the handle of the taskbar. Restarting...")
                     System.Threading.Thread.Sleep(1000)
                     Application.Restart()
                 End If
@@ -701,6 +693,7 @@ Public Class TaskbarCenter
 
                 Dim LastChildPos As RectangleX
                 Dim TaskListPos As RectangleX
+                Dim toolbarChildCount As Integer = 0
 
                 Dim accessible As Accessibility.IAccessible = MSAA.GetAccessibleObjectFromHandle(CType(TaskList, IntPtr))
                 Dim children() As Accessibility.IAccessible = MSAA.GetAccessibleChildren(accessible)
@@ -709,10 +702,17 @@ Public Class TaskbarCenter
 
                 For Each childx As Accessibility.IAccessible In children
                     If CInt(childx.accRole(0)) = CInt(22) Then '0x16 = toolbar
-                        LastChildPos = GetLocation(childx, MSAA.GetAccessibleChildren(childx).Length)
+                        toolbarChildCount = MSAA.GetAccessibleChildren(childx).Length
+                        If toolbarChildCount > 0 Then LastChildPos = GetLocation(childx, toolbarChildCount)
                         Exit For
                     End If
                 Next
+
+                If toolbarChildCount = 0 OrElse TaskListPos.width <= 0 OrElse TaskListPos.height <= 0 OrElse
+                    LastChildPos.width <= 0 OrElse LastChildPos.height <= 0 Then
+                    allTaskbarsValid = False
+                    Continue For
+                End If
 
                 Dim RebarHandle = Win32.GetParent(CType(TaskList, IntPtr))
                 Dim accessible3 As Accessibility.IAccessible = MSAA.GetAccessibleObjectFromHandle(RebarHandle)
@@ -727,8 +727,6 @@ Public Class TaskbarCenter
                 Dim RebarWndLeft As Integer
                 Dim TaskbarLeft As Integer
                 Dim Position As Integer
-                Dim curleft As Integer
-                Dim curleft2 As Integer
 
                 Dim TrayNotifyPos As RectangleX
                 Dim NewsAndInterestsPos As RectangleX
@@ -774,15 +772,6 @@ Public Class TaskbarCenter
                 Dim TrayWndPos As RectangleX = GetLocation(accessible2, 0)
                 Dim RebarPos As RectangleX = GetLocation(accessible3, 0)
 
-                'If the taskbar is still moving then wait until it's not (This will prevent unneeded calculations that trigger the animator)
-                Do
-                    curleft = TaskListPos.left
-                    TaskListPos = GetLocation(accessible, 0)
-                    '' TaskListcL = childLeft2
-                    System.Threading.Thread.Sleep(30)
-                    curleft2 = TaskListPos.left
-                Loop Until curleft = curleft2
-
                 'Get current taskbar orientation (H = Horizontal | V = Vertical)
                 If TaskListPos.height >= TaskListPos.width Then
                     Orientation = "V"
@@ -798,17 +787,18 @@ Public Class TaskbarCenter
 
 
 
-                'Calculate the exact width of the total icons
-                Try
-                    If Orientation = "H" Then
-                        TaskbarWidth = CInt((LastChildPos.left - TaskListPos.left)) ''TaskbarTotalHeight
-                    Else
-                        TaskbarWidth = CInt((LastChildPos.top - TaskListPos.top))
-                    End If
-                Catch
-                    TaskbarWidth = 0
-                    'Taskbar is empty just skip
-                End Try
+                'Only move the taskbar after a valid icon location was read.
+                If Orientation = "H" Then
+                    TaskbarWidth = LastChildPos.left - TaskListPos.left
+                Else
+                    TaskbarWidth = LastChildPos.top - TaskListPos.top
+                End If
+                If TaskbarWidth < 0 Then
+                    allTaskbarsValid = False
+                    Continue For
+                End If
+                Dim projectedWidth As Integer
+                If ProjectedWidths.TryGetValue(CType(TaskList, IntPtr), projectedWidth) Then TaskbarWidth = projectedWidth
 
                 'Get info needed to calculate the position
                 If Orientation = "H" Then
@@ -976,8 +966,6 @@ Public Class TaskbarCenter
 
                 If Settings.TaskbarSegments = 1 Then
                     If Not Settings.TaskbarStyle = 0 Then
-                        '' Win32.SendMessage(TrayWndHandle, Win32.WM_THEMECHANGED, True, 0)
-                        ''Win32.SendMessage(TrayWndHandle, Win32.WM_DWMCOLORIZATIONCOLORCHANGED, True, 0)
                         Win32.SendMessage(TrayWndHandle, Win32.WM_DWMCOMPOSITIONCHANGED, True, 0)
                     End If
                 End If
@@ -1092,13 +1080,15 @@ Public Class TaskbarCenter
                 End If
 
             Next
+            Return allTaskbarsValid
         Catch ex As Exception
 
             Console.WriteLine("@Calculator | " & ex.Message)
+            Return False
 
         End Try
 
-    End Sub
+    End Function
 
     Private Shared Sub DaAnimator(animationStyle As String, taskList As IntPtr, taskListc As Integer, rebarc As Integer, orient As String, position As Integer, isprimary As Boolean, width As Integer)
 

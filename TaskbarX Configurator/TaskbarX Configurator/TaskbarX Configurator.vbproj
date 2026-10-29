@@ -7,7 +7,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
     <OutputType>WinExe</OutputType>
     <RootNamespace>TaskbarXConfiguratorWPF</RootNamespace>
-    <AssemblyName>TaskbarX Configurator</AssemblyName>
+    <AssemblyName>TaskbarZ</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MyType>Custom</MyType>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -54,7 +54,7 @@
     <DefineTrace>true</DefineTrace>
     <IncrementalBuild>false</IncrementalBuild>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\APPX\TaskbarX\Release\</OutputPath>
+    <OutputPath>..\..\APPX\TaskbarZ\Release\</OutputPath>
     <DocumentationFile>TaskbarX Configurator.xml</DocumentationFile>
     <NoWarn>42314</NoWarn>
     <Prefer32Bit>true</Prefer32Bit>
@@ -93,7 +93,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\..\APPX\TaskbarX64\Release\</OutputPath>
+    <OutputPath>..\..\APPX\TaskbarZ64\Release\</OutputPath>
     <DocumentationFile>TaskbarX Configurator.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>42314</NoWarn>
@@ -118,7 +118,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\..\APPX\TaskbarX32\Release\</OutputPath>
+    <OutputPath>..\..\APPX\TaskbarZ32\Release\</OutputPath>
     <DocumentationFile>TaskbarX Configurator.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>42314</NoWarn>
@@ -228,10 +228,6 @@
     <Compile Include="My Project\AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="My Project\MyExtensions\MyWpfExtension.vb">
-      <VBMyExtensionTemplateID>Microsoft.VisualBasic.WPF.MyExtension</VBMyExtensionTemplateID>
-      <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
-    </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -270,6 +266,7 @@
     <PackageReference Include="Emoji.Wpf">
       <Version>0.3.3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.22621.2</Version>
     </PackageReference>
@@ -282,6 +279,12 @@
     <PackageReference Include="TaskScheduler">
       <Version>2.10.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\TaskbarX\TaskbarX\TaskbarX.vbproj">
+      <Project>{280F29CB-27F8-41FA-8111-21E6916583FD}</Project>
+      <Name>TaskbarZ.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

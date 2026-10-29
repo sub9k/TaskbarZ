@@ -7,10 +7,10 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("TaskbarX")>
+<Assembly: AssemblyTitle("TaskbarZ")>
 <Assembly: AssemblyDescription("Center taskbar icons.")>
 <Assembly: AssemblyCompany("Chris Andriessen")>
-<Assembly: AssemblyProduct("TaskbarX")>
+<Assembly: AssemblyProduct("TaskbarZ")>
 <Assembly: AssemblyCopyright("Copyright © Chris Andriessen 2022")>
 <Assembly: AssemblyTrademark("")>
 
@@ -30,5 +30,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.7.8.0")>
-<Assembly: AssemblyFileVersion("1.7.8.0")>
+<Assembly: AssemblyVersion("0.1.0.0")>
+<Assembly: AssemblyFileVersion("0.1.0.0")>

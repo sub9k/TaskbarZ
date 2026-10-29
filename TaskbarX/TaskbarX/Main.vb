@@ -8,6 +8,7 @@ Imports System.Threading
 Public Class Main
 
     Public Shared noty As New NotifyIcon
+    Public Shared Event OpenSettingsRequested()
 
     Public Shared Sub Main()
         Try
@@ -21,12 +22,12 @@ Public Class Main
             Settings.CenterSecondaryOnly = 0
             Settings.AnimationStyle = "cubiceaseinout"
             Settings.AnimationSpeed = 300
-            Settings.LoopRefreshRate = 400
+            Settings.LoopRefreshRate = 25
             Settings.CenterInBetween = 0
             Settings.DontCenterTaskbar = 0
             Settings.FixToolbarsOnTrayChange = 1
             Settings.OnBatteryAnimationStyle = "cubiceaseinout"
-            Settings.OnBatteryLoopRefreshRate = 400
+            Settings.OnBatteryLoopRefreshRate = 50
             Settings.RevertZeroBeyondTray = 1
             Settings.TaskbarRounding = 0
             Settings.TaskbarSegments = 0
@@ -42,7 +43,7 @@ Public Class Main
                 End If
                 If argument.Contains("-showstartmenu") Then
                     Win32.ShowStartMenu()
-                    End
+                    Environment.Exit(0)
                 End If
                 If argument.Contains("-console=") Then
                     Win32.AllocConsole()
@@ -130,7 +131,7 @@ Public Class Main
                 End If
                 If argument.Contains("-sti=") Then
                     ''Settings.ShowTrayIcon = CInt(val(1))
-                    Settings.ShowTrayIcon = CInt(0)
+                    Settings.ShowTrayIcon = CInt(1)
                 End If
                 If argument.Contains("-tbsom=") Then
                     Settings.TaskbarStyleOnMax = CInt(val(1))
@@ -152,9 +153,9 @@ Public Class Main
                 End If
             Next
 
-            'Kill every other running instance of TaskbarX
+            'Kill every other running instance of TaskbarZ
             Try
-                For Each prog As Process In Process.GetProcessesByName("TaskbarX")
+                For Each prog As Process In Process.GetProcessesByName("TaskbarZ")
                     If Not prog.Id = Process.GetCurrentProcess.Id Then
                         prog.Kill()
                     End If
@@ -169,7 +170,7 @@ Public Class Main
 
             'Makes the animations run smoother
             Dim currentProcess As Process = Process.GetCurrentProcess
-            currentProcess.PriorityClass = ProcessPriorityClass.Idle
+            currentProcess.PriorityClass = ProcessPriorityClass.Normal
 
             'Prevent wrong position calculations
             Win32.SetProcessDpiAwareness(Win32.PROCESS_DPI_AWARENESS.Process_Per_Monitor_DPI_Aware)
@@ -188,7 +189,7 @@ Public Class Main
                 Handle = MSTaskListWClass
                 'Lock the Taskbar
                 '  Win32.PostMessage(Shell_TrayWnd, CUInt(&H111), CType(424, IntPtr), CType(vbNullString, IntPtr))
-            Loop Until Not Handle = Nothing
+            Loop Until Not Handle = Nothing OrElse Win32.FindWindowEx(Win32.FindWindowByClass("Shell_TrayWnd", CType(0, IntPtr)), CType(0, IntPtr), "Windows.UI.Composition.DesktopWindowContentBridge", Nothing) <> IntPtr.Zero
 
 
             Dim Win11Taskbar = Win32.FindWindowEx(Win32.FindWindowByClass("Shell_TrayWnd", CType(0, IntPtr)), CType(0, IntPtr), "Windows.UI.Composition.DesktopWindowContentBridge", Nothing)
@@ -202,7 +203,7 @@ Public Class Main
                 noty.Visible = False
                 TaskbarCenter.RevertToZero()
                 ResetTaskbarStyle()
-                End
+                Environment.Exit(0)
             End If
 
 
@@ -212,7 +213,6 @@ Public Class Main
             End If
 
             'Just empty startup memory before starting
-            ClearMemory()
 
             'Reset the taskbar style...
             ResetTaskbarStyle()
@@ -224,15 +224,19 @@ Public Class Main
 
 
 
-            If Settings.ShowTrayIcon = 1 Then
-
-
-                noty.Text = "TaskbarX (L = Restart) (M = Config) (R = Stop)"
-                noty.Icon = My.Resources.icon
-                noty.Visible = True
-
-
-            End If
+            noty.Text = "TaskbarZ"
+            noty.Icon = My.Resources.icon
+            Dim menu As New ContextMenuStrip()
+            menu.Items.Add("Settings", Nothing, Sub() RaiseEvent OpenSettingsRequested())
+            menu.Items.Add("Restart", Nothing, Sub() Application.Restart())
+            menu.Items.Add("Exit", Nothing, Sub()
+                                                  noty.Visible = False
+                                                  TaskbarCenter.RevertToZero()
+                                                  ResetTaskbarStyle()
+                                                  Environment.Exit(0)
+                                              End Sub)
+            noty.ContextMenuStrip = menu
+            noty.Visible = True
 
             AddHandler noty.MouseClick, AddressOf MnuRef_Click
 
@@ -258,7 +262,7 @@ Public Class Main
 
 
     Public Shared Sub Toaster(ByVal message As String)
-        noty.BalloonTipTitle = "TaskbarX"
+        noty.BalloonTipTitle = "TaskbarZ"
         noty.BalloonTipText = message
         noty.Visible = True
         noty.ShowBalloonTip(3000)
@@ -266,31 +270,8 @@ Public Class Main
 
     Public Shared Sub MnuRef_Click(sender As Object, e As MouseEventArgs)
 
-        If (e.Button = MouseButtons.Left) Then
-            noty.Visible = False
-            Application.Restart()
-        ElseIf (e.Button = MouseButtons.Right) Then
-            noty.Visible = False
-            TaskbarCenter.RevertToZero()
-            ResetTaskbarStyle()
-            End
-        ElseIf (e.Button = MouseButtons.Middle) Then
-            If System.AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen") Then
-                Try
-                    Dim processInfo As ProcessStartInfo = New ProcessStartInfo With {
-                        .WindowStyle = ProcessWindowStyle.Hidden,
-                        .FileName = "cmd.exe",
-                        .Arguments = " /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarXGUI"
-                    }
-                    Process.Start(processInfo)
-                Catch
-                End Try
-            Else
-                Try
-                    System.Diagnostics.Process.Start("TaskbarX Configurator.exe")
-                Catch
-                End Try
-            End If
+        If e.Button = MouseButtons.Left OrElse e.Button = MouseButtons.Middle Then
+            RaiseEvent OpenSettingsRequested()
         End If
 
     End Sub

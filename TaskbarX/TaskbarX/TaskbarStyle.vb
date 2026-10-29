@@ -207,48 +207,23 @@ Public Class TaskbarStyle
                 t2.Start()
             End If
 
-            'Set taskbar style for all TrayWnds each 14 millisecond
-            For Each tray As IntPtr In trays
-                Dim trayptr As IntPtr = CType(tray.ToString, IntPtr)
-                Win32.SetWindowCompositionAttribute(CType(trayptr, IntPtr), data)
-
-
-
-
-                '' Dim tt As New ListBox
-                '' Dim TrayPos2 As Win32.RECT
-                '' Win32.GetWindowRect(tray, TrayPos2)
-                '' tt.Top = 0
-                '' tt.Left = 0
-                '' tt.Height = 2000
-                '' tt.Width = 2000
-                '' tt.BackColor = Color.Red
-
-                ''  tt.FormBorderStyle = FormBorderStyle.None
-                ''  Win32.SetWindowLong(tt.Handle, CType(Win32.GWL_STYLE, Win32.WindowStyles), &H80000000L)
-                '' tt.Show()
-                '' Dim myProg As New Process
-                '' With myProg.StartInfo
-                ''     .FileName = "D:\Visual Studio Projects\!TaskbarX\APPX\TaskbarX\Release\TaskbarX Configurator.exe"
-                ''     .Arguments = ""
-                '' End With
-                '' myProg.Start()
-
-                '' Thread.Sleep(5000)
-
-
-                ''Win32.SetParent(myProg.MainWindowHandle, tray)
-
-            Next
-
+            'The blur API forces Explorer to redraw the taskbar. Applying it on
+            'every frame also competes with TranslucentTB when it is running.
             Do
                 Try
-
-                    For Each tray As IntPtr In trays
-                        Win32.SetWindowCompositionAttribute(tray, data)
+                    Dim competingStylers = Process.GetProcessesByName("TranslucentTB")
+                    Dim useOwnStyle As Boolean = competingStylers.Length = 0
+                    For Each competingStyler As Process In competingStylers
+                        competingStyler.Dispose()
                     Next
-                    System.Threading.Thread.Sleep(10)
+                    If useOwnStyle Then
+                        For Each tray As IntPtr In trays
+                            Win32.SetWindowCompositionAttribute(tray, data)
+                        Next
+                    End If
+                    Thread.Sleep(1000)
                 Catch
+                    Thread.Sleep(1000)
                 End Try
             Loop
         Catch ex As Exception

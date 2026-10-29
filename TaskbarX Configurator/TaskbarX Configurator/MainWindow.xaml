@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskbarXConfiguratorWPF"
         mc:Ignorable="d"
-        Title="TaskbarX Configurator" Height="649.581" Width="863.329"
+        Title="TaskbarZ Settings" Height="649.581" Width="863.329"
         ResizeMode="NoResize"
        ContentRendered="Window_Loaded"
     xmlns:ui="http://schemas.modernwpf.com/2019"
@@ -117,9 +117,9 @@
                         <ColumnDefinition Width="457*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Animation" FontSize="20" Margin="10,50,0,478" VerticalAlignment="Center" Height="32" Grid.ColumnSpan="2" />
-                    <ComboBox ToolTip="Select the Animation you want TaskbarX to use to move the taskbar." x:Name="ComboBox1" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="2" />
+                    <ComboBox ToolTip="Select the Animation you want TaskbarZ to use to move the taskbar." x:Name="ComboBox1" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,96,0,0" TextWrapping="Wrap" Text="Animation Style" VerticalAlignment="Top" />
-                    <ComboBox  ToolTip="Select the Animation you want TaskbarX to use to move the taskbar when your laptop is running on battery." x:Name="ComboBox2" HorizontalAlignment="Left" Margin="10,183,0,0" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="2" />
+                    <ComboBox  ToolTip="Select the Animation you want TaskbarZ to use to move the taskbar when your laptop is running on battery." x:Name="ComboBox2" HorizontalAlignment="Left" Margin="10,183,0,0" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,162,0,0" TextWrapping="Wrap" Text="Animation Style OnBattery" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="201" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,244,0,0" TextWrapping="Wrap" Text="Animation Speed" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="201" />
                     <ui:NumberBox  ToolTip="Set the speed of the Animation in milliseconds." x:Name="NumericUpDown4" HorizontalAlignment="Left" Text="300" Margin="10,265,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
@@ -146,14 +146,14 @@
                     <ui:NumberBox ToolTip="Set the offset position based on the center position for the primary taskbar in pixels. Use '-' for negative numbers." x:Name="NumericUpDown1" HorizontalAlignment="Left" Text="0"  Margin="10,117,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
                     <TextBlock HorizontalAlignment="Left" Margin="98,125,0,0" TextWrapping="Wrap" Text="px" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
                     <CheckBox ToolTip="Center between Start, Search etc... and the tray on the right with the clock, volume etc... (Keep the distance equal between them)" x:Name="CheckBox1" Content="Compensate Tray Clock etc..." HorizontalAlignment="Left" Margin="10,418,0,0" VerticalAlignment="Top" Width="214" Grid.ColumnSpan="2" />
-                    <CheckBox ToolTip="Stop TaskbarX from centering the Taskbar." Content="Don't center Taskbar" x:Name="CheckBox11" HorizontalAlignment="Left" Margin="10,455,0,0" VerticalAlignment="Top" Width="230" Grid.ColumnSpan="2" />
+                    <CheckBox ToolTip="Stop TaskbarZ from centering the Taskbar." Content="Don't center Taskbar" x:Name="CheckBox11" HorizontalAlignment="Left" Margin="10,455,0,0" VerticalAlignment="Top" Width="230" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,244,0,0" TextWrapping="Wrap" Text="Skip Resolution" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
-                    <ui:NumberBox ToolTip="If your resolutions width becomes this value in pixels then TaskbarX will pause and put the icons back to the left. If it changes then it will start centering the icons again." x:Name="NumericUpDown7" Text="0" HorizontalAlignment="Left" Margin="10,265,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
+                    <ui:NumberBox ToolTip="If your resolutions width becomes this value in pixels then TaskbarZ will pause and put the icons back to the left. If it changes then it will start centering the icons again." x:Name="NumericUpDown7" Text="0" HorizontalAlignment="Left" Margin="10,265,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
                     <TextBlock HorizontalAlignment="Left" Margin="98,273,0,0" TextWrapping="Wrap" Text="px" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
                     <emoji:TextBlock  Text="🕹️" Margin="442,58,10,441" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
-                    <ui:NumberBox ToolTip="If your resolutions width becomes this value in pixels then TaskbarX will pause and put the icons back to the left. If it changes then it will start centering the icons again." x:Name="NumericUpDown7_Copy" Text="0" HorizontalAlignment="Left" Margin="10,308,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
+                    <ui:NumberBox ToolTip="If your resolutions width becomes this value in pixels then TaskbarZ will pause and put the icons back to the left. If it changes then it will start centering the icons again." x:Name="NumericUpDown7_Copy" Text="0" HorizontalAlignment="Left" Margin="10,308,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
                     <TextBlock HorizontalAlignment="Left" Margin="98,316,0,0" TextWrapping="Wrap" Text="px" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
-                    <ui:NumberBox ToolTip="If your resolutions width becomes this value in pixels then TaskbarX will pause and put the icons back to the left. If it changes then it will start centering the icons again." x:Name="NumericUpDown7_Copy1" Text="0" HorizontalAlignment="Left" Margin="10,351,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
+                    <ui:NumberBox ToolTip="If your resolutions width becomes this value in pixels then TaskbarZ will pause and put the icons back to the left. If it changes then it will start centering the icons again." x:Name="NumericUpDown7_Copy1" Text="0" HorizontalAlignment="Left" Margin="10,351,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
                     <TextBlock HorizontalAlignment="Left" Margin="98,359,0,0" TextWrapping="Wrap" Text="px" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
                     <CheckBox ToolTip="Revert the taskbar back to the left when the icons start overlapping with the Tray area." x:Name="CheckBox4_Copy" Content="Revert to zero beyond Tray" HorizontalAlignment="Left" Margin="10,492,0,0" VerticalAlignment="Top" Width="194" IsChecked="True" Grid.ColumnSpan="2" />
                 </Grid>
@@ -166,11 +166,11 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Taskschedule" FontSize="20" Margin="10,50,0,478" VerticalAlignment="Center" Height="32" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,96,0,0" TextWrapping="Wrap" Text="Delay" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="201" />
-                    <ui:NumberBox ToolTip="Does TaskbarX not run on start-up? Well 6 seconds could be to early for TaskbarX to start. Try increasing this value in seconds." x:Name="NumericUpDown6" HorizontalAlignment="Left" Text="6" Margin="10,117,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
+                    <ui:NumberBox ToolTip="Does TaskbarZ not run on start-up? Well 6 seconds could be to early for TaskbarZ to start. Try increasing this value in seconds." x:Name="NumericUpDown6" HorizontalAlignment="Left" Text="6" Margin="10,117,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
                     <TextBlock HorizontalAlignment="Left" Margin="98,125,0,0" TextWrapping="Wrap" Text="sec" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="201" />
-                    <Button ToolTip="Remove the TaskbarX start-up taskschedule." Content="Remove" HorizontalAlignment="Left" Margin="10,177,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_3" />
-                    <Button ToolTip="Create the TaskbarX start-up taskschedule." Content="Create" HorizontalAlignment="Left" Margin="98,177,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_33" Grid.ColumnSpan="2" />
-                    <emoji:TextBlock HorizontalAlignment="Left" Margin="10,228,0,0" TextWrapping="Wrap" Text="📌 The taskschedule is responsible for making TaskbarX run at startup. And also stores your settings." VerticalAlignment="Top" Width="641" Grid.ColumnSpan="2" />
+                    <Button ToolTip="Remove the TaskbarZ start-up taskschedule." Content="Remove" HorizontalAlignment="Left" Margin="10,177,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_3" />
+                    <Button ToolTip="Create the TaskbarZ start-up taskschedule." Content="Create" HorizontalAlignment="Left" Margin="98,177,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_33" Grid.ColumnSpan="2" />
+                    <emoji:TextBlock HorizontalAlignment="Left" Margin="10,228,0,0" TextWrapping="Wrap" Text="📌 The taskschedule is responsible for making TaskbarZ run at startup. And also stores your settings." VerticalAlignment="Top" Width="641" Grid.ColumnSpan="2" />
                     <emoji:TextBlock  Text="🚥" Margin="442,58,10,445" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
                     <TextBox x:Name="TextboxLink" HorizontalAlignment="Left" Height="116" Margin="10,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="359" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,305,0,0" TextWrapping="Wrap" Text="Shortcut link" VerticalAlignment="Top" />
@@ -189,11 +189,11 @@
                     <CheckBox ToolTip="Only center the secondary taskbar(s) on your secondary monitor(s)." x:Name="CheckBox3" Content="Only Center Secondary Taskbar" HorizontalAlignment="Left" Margin="10,129,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="271" />
                     <CheckBox ToolTip="Do you have custom toolbars like NetSpeedMonitor? Enable this to update the toolbars position when the size of the tray changes." x:Name="CheckBox4" Content="Update Taskbar Toolbars" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="252" IsChecked="True" />
 
-                    <CheckBox ToolTip="Are you a gamer? Well MSAA may interfere with your game while playing. It can cause keyboard ghosting in some games. Enable this to Pause TaskbarX when you are running a game in fullscreen." x:Name="Checkbox9" Content="Pause looper when fullscreen app is running" HorizontalAlignment="Left" Margin="10,203,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                    <CheckBox ToolTip="Are you a gamer? Well MSAA may interfere with your game while playing. It can cause keyboard ghosting in some games. Enable this to Pause TaskbarZ when you are running a game in fullscreen." x:Name="Checkbox9" Content="Pause looper when fullscreen app is running" HorizontalAlignment="Left" Margin="10,203,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" />
                     <CheckBox ToolTip="Hide the Primary Start button." Content="Hide Primary Start button" x:Name="Checkbox12" HorizontalAlignment="Left" Margin="10,240,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="252" />
                     <CheckBox ToolTip="Hide the Secondary Start button." Content="Hide Secondary Start button" HorizontalAlignment="Left" Margin="10,277,0,0" x:Name="Checkbox13" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="240" />
                     <CheckBox ToolTip="Hide the Primary Tray area with the clock." Content="Hide Primary Tray area" HorizontalAlignment="Left" Margin="10,314,0,0" x:Name="Checkbox14" VerticalAlignment="Top" Grid.ColumnSpan="2" />
-                    <CheckBox ToolTip="Show a trayicon to quickly restart and stop TaskbarX." Content="Show Tray icon" HorizontalAlignment="Left" Margin="10,388,0,0" VerticalAlignment="Top" x:Name="Checkbox16" Visibility="Hidden" />
+                    <CheckBox ToolTip="Show a trayicon to quickly restart and stop TaskbarZ." Content="Show Tray icon" HorizontalAlignment="Left" Margin="10,388,0,0" VerticalAlignment="Top" x:Name="Checkbox16" Visibility="Hidden" />
                     <CheckBox ToolTip="Hide the Secondary Tray area with the clock." x:Name="Checkbox15" Content="Hide Secondary Tray area" HorizontalAlignment="Left" Margin="10,351,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="289" />
                     <emoji:TextBlock  Text="⚙️" Margin="442,58,10,479" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
                 </Grid>
@@ -206,10 +206,10 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Mechanics" FontSize="20" Margin="10,50,0,512" VerticalAlignment="Center" Height="32" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,185,0,0" TextWrapping="Wrap" Text="Refresh Rate" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
-                    <ui:NumberBox ToolTip="TaskbarX uses a looper to detect changes in the taskbar. The delay is 400ms by default. Making it faster will make TaskbarX respond faster to a change but, will increase CPU Usage." x:Name="NumericUpDown3" Text="400" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" Minimum="100" />
+                    <ui:NumberBox ToolTip="TaskbarZ checks taskbar changes every 25 ms on external power. Values above 25 ms are capped to keep animations responsive." x:Name="NumericUpDown3" Text="25" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" Minimum="10" />
                     <TextBlock HorizontalAlignment="Left" Margin="98,215,0,0" TextWrapping="Wrap" Text="ms" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,259,0,0" TextWrapping="Wrap" Text="Refresh Rate OnBattery" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
-                    <ui:NumberBox ToolTip="Override the Refresh Rate when your laptop is running on battery." x:Name="NumericUpDown5" Text="400" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
+                    <ui:NumberBox ToolTip="TaskbarZ checks taskbar changes every 50 ms on battery. Values above 50 ms are capped to keep animations responsive." x:Name="NumericUpDown5" Text="50" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" Minimum="10" />
                     <TextBlock HorizontalAlignment="Left" Margin="98,289,0,0" TextWrapping="Wrap" Text="ms" VerticalAlignment="Top" Width="201" Grid.ColumnSpan="2" />
 
                     <emoji:TextBlock  Text="🦾" Margin="442,58,10,479" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
@@ -246,20 +246,20 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="About" FontSize="20" Margin="10,50,0,478" VerticalAlignment="Center" Height="32" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,97,0,0" TextWrapping="Wrap" Text="Version:" VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,134,0,0" TextWrapping="Wrap" Text="Author: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,171,0,0" TextWrapping="Wrap" Text="Website: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,208,0,0" TextWrapping="Wrap" Text="Github: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,310,0,0" TextWrapping="Wrap" Text="E-mail: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,347,0,0" TextWrapping="Wrap" Text="Reddit: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
+                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,134,0,0" TextWrapping="Wrap" Text="Maintainer: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
+                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,171,0,0" TextWrapping="Wrap" Text="Repository: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
+                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,208,0,0" TextWrapping="Wrap" Text="Upstream: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
+                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,310,0,0" TextWrapping="Wrap" Text="License: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
+                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,347,0,0" TextWrapping="Wrap" Text="Original author: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,245,0,0" TextWrapping="Wrap" Text="Bug Report: " VerticalAlignment="Top" Width="124" Height="32" />
-                    <TextBox x:Name="versiontb" IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,91,0,0" TextWrapping="Wrap" Text="1.7.8.0" VerticalAlignment="Top" Width="64" Grid.Column="1" />
-                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,165,0,0" TextWrapping="Wrap" Text="https://chrisandriessen.nl/taskbarx" VerticalAlignment="Top" Width="447" Grid.Column="1" />
-                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,128,0,0" TextWrapping="Wrap" Text="Chris Andriessen" VerticalAlignment="Top" Width="447" Grid.Column="1" />
+                    <TextBox x:Name="versiontb" IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,91,0,0" TextWrapping="Wrap" Text="0.1.0.0" VerticalAlignment="Top" Width="64" Grid.Column="1" />
+                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,165,0,0" TextWrapping="Wrap" Text="https://github.com/sub9k/TaskbarZ" VerticalAlignment="Top" Width="447" Grid.Column="1" />
+                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,128,0,0" TextWrapping="Wrap" Text="sub9k" VerticalAlignment="Top" Width="447" Grid.Column="1" />
                     <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,202,0,0" TextWrapping="Wrap" Text="https://github.com/ChrisAnd1998/TaskbarX" VerticalAlignment="Top" Width="447" Grid.Column="1" />
-                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,239,0,0" TextWrapping="Wrap" Text="https://github.com/ChrisAnd1998/TaskbarX/issues" VerticalAlignment="Top" Width="447" Grid.Column="1" />
-                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,304,0,0" TextWrapping="Wrap" Text="chrisand1998@gmail.com" VerticalAlignment="Top" Width="447" Grid.Column="1" />
-                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,341,0,0" TextWrapping="Wrap" Text="u/chrisand1998" VerticalAlignment="Top" Width="447" Grid.Column="1" />
-                    <Button ToolTip="Check if there is a new version available." x:Name="bb" Content="Check" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="57" Margin="69,91,0,0" Style="{StaticResource AccentButtonStyle}" Grid.Column="1" Click="Button_Click_4" />
+                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,239,0,0" TextWrapping="Wrap" Text="https://github.com/sub9k/TaskbarZ/issues" VerticalAlignment="Top" Width="447" Grid.Column="1" />
+                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,304,0,0" TextWrapping="Wrap" Text="MIT" VerticalAlignment="Top" Width="447" Grid.Column="1" />
+                    <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,341,0,0" TextWrapping="Wrap" Text="Chris Andriessen" VerticalAlignment="Top" Width="447" Grid.Column="1" />
+                    <Button ToolTip="Open TaskbarZ releases on GitHub." x:Name="bb" Content="Releases" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="75" Margin="69,91,0,0" Style="{StaticResource AccentButtonStyle}" Grid.Column="1" Click="Button_Click_4" />
                     <TextBlock x:Name="vers" Grid.Column="1" HorizontalAlignment="Left" Margin="131,99,0,0"  Text="No connection.." VerticalAlignment="Top" Width="197" Height="19" />
                     <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,412,0,0" TextWrapping="Wrap" Text="References: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
                     <TextBox IsReadOnly="True" Grid.Column="1" HorizontalAlignment="Left" Height="71" Margin="0,406,0,0" TextWrapping="Wrap" Text="ModernWPF:  https://github.com/Kinnara/ModernWpf&#xD;&#xA;TaskScheduler:  https://github.com/dahall/TaskScheduler&#xD;&#xA;Emoji.Wpf:  https://github.com/samhocevar/emoji.wpf" VerticalAlignment="Top" Width="447" />
@@ -272,19 +272,19 @@
                         <ColumnDefinition Width="457*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Uninstall" FontSize="20" Margin="10,50,0,478" VerticalAlignment="Center" Height="32" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,96,0,0" TextWrapping="Wrap" Text="The only way to properly uninstall TaskbarX..." VerticalAlignment="Top" Grid.ColumnSpan="2" Width="407" />
-                    <Button ToolTip="Uninstall TaskbarX :(" Content="Uninstall" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_8" />
+                    <TextBlock HorizontalAlignment="Left" Margin="10,96,0,0" TextWrapping="Wrap" Text="The only way to properly uninstall TaskbarZ..." VerticalAlignment="Top" Grid.ColumnSpan="2" Width="407" />
+                    <Button ToolTip="Uninstall TaskbarZ :(" Content="Uninstall" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_8" />
                     <emoji:TextBlock  Text="🗑️" Margin="442,58,10,445" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
                 </Grid>
             </TabItem>
         </TabControl>
 
-        <Button ToolTip="Apply settings, start-up task and restart TaskbarX." Content="Apply" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="87" Margin="750,357,0,-357" Style="{StaticResource AccentButtonStyle}" Click="Button_Click_1" />
+        <Button ToolTip="Apply settings, start-up task and restart TaskbarZ." Content="Apply" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="87" Margin="750,357,0,-357" Style="{StaticResource AccentButtonStyle}" Click="Button_Click_1" />
         <Button ToolTip="Close the Configurator." Content="Close" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="87" Margin="658,301,0,-301" Click="Button_Click" />
-        <Button ToolTip="Stop the TaskbarX background service. And put the icons back to the left." Content="Stop TaskbarX" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="510,245,0,-245" Click="Button_Click_2" />
+        <Button ToolTip="Stop the TaskbarZ background service. And put the icons back to the left." Content="Stop TaskbarZ" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="510,245,0,-245" Click="Button_Click_2" />
         <Button ToolTip="Reset all settings back to default. Click 'Apply' to confirm." FontFamily="Segoe MDL2 Assets" Content="&#xE777;"  FontSize="19" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="38" Margin="-2,190,0,-190" Click="Button_Click_6" />
         <Button ToolTip="Reload current applied settings." FontFamily="Segoe MDL2 Assets" Content="&#xE895;"  FontSize="19" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="38" Margin="41,134,0,-134" Click="Button_Click_5" />
-        <Button ToolTip="Restart the TaskbarX background service." Content="Restart TaskbarX" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="384,77,0,-77" Click="Button_Click_7" />
+        <Button ToolTip="Restart the TaskbarZ background service." Content="Restart TaskbarZ" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="384,77,0,-77" Click="Button_Click_7" />
         <CheckBox  ToolTip="Show console output for debugging." x:Name="checkboxconsole" Content="Show Console" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="51" RenderTransformOrigin="0.5,0.5" Margin="183,21,0,-21" />
     </ui:SimpleStackPanel>
 </Window>

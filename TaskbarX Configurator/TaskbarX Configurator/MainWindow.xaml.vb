@@ -15,6 +15,17 @@ Imports ModernWpf.Controls
 
 Class MainWindow
 
+    Private Sub MainWindow_StateChanged(sender As Object, e As EventArgs) Handles Me.StateChanged
+        If WindowState = System.Windows.WindowState.Minimized Then Hide()
+    End Sub
+
+    Private Sub RestartWithSettings(parameters As String)
+        Dispatcher.BeginInvoke(New System.Action(Sub()
+                                              Process.Start(Process.GetCurrentProcess().MainModule.FileName, parameters)
+                                              Environment.Exit(0)
+                                          End Sub), System.Windows.Threading.DispatcherPriority.ApplicationIdle)
+    End Sub
+
     <DllImport("user32.dll", ExactSpelling:=True, CharSet:=CharSet.Auto)>
     Public Shared Function GetParent(ByVal hWnd As IntPtr) As IntPtr
     End Function
@@ -192,7 +203,7 @@ Class MainWindow
             End Try
         Else
             Try
-                System.Diagnostics.Process.Start("TaskbarX.exe", "-stop")
+                System.Diagnostics.Process.Start("TaskbarZ.exe", "-stop")
             Catch
             End Try
         End If
@@ -363,7 +374,7 @@ Class MainWindow
         Else
 
 
-            startbutton_shortcut.Text = Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarX.exe" & Chr(34) & " -showstartmenu"
+            startbutton_shortcut.Text = Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarZ.exe" & Chr(34) & " -showstartmenu"
 
         End If
 
@@ -373,45 +384,13 @@ Class MainWindow
 
 
 
-        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 Or SecurityProtocolType.Tls12
-
-        If Not System.AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen") Then
-            Try
-                Dim address As String = "https://raw.githubusercontent.com/ChrisAnd1998/FalconX-Center-Taskbar/master/VERSION"
-                Dim client As WebClient = New WebClient With {
-                    .CachePolicy = New System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore)
-                }
-                Dim reader As StreamReader = New StreamReader(client.OpenRead(address))
-
-                Dim latest = reader.ReadToEnd.ToString
-
-
-
-                If latest.Contains(Assembly.GetExecutingAssembly().GetName().Version.ToString()) Then
-                    vers.Text = "You are up to date."
-                Else
-                    If latest.Substring(0, 7).ToString.Replace(".", "") <= Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", "") Then
-                        vers.Text = "This is a Pre-Release! Unstable."
-                    Else
-                        vers.Text = "Update " & latest.Substring(0, 7) & " is available!"
-                    End If
-
-                End If
-
-                reader.Dispose()
-                client.Dispose()
-            Catch
-            End Try
-        Else
-            bb.Visibility = Visibility.Hidden
-            vers.Visibility = Visibility.Hidden
-        End If
+        vers.Text = "See releases for updates."
 
         Try
 
             Using ts As TaskService = New TaskService()
 
-                Dim td = ts.GetTask("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
+                Dim td = ts.GetTask("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
 
                 Dim cfg As String = Nothing
 
@@ -419,10 +398,10 @@ Class MainWindow
 
                 If System.AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen") Then
 
-                    ''cfg = td.Definition.Actions.ToString.Replace("cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarX", "")
+                    ''cfg = td.Definition.Actions.ToString.Replace("cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarZ", "")
                     cfg = td.Definition.Actions.ToString.Replace("explorer.exe taskbarx:", "")
                 Else
-                    cfg = td.Definition.Actions.ToString.Replace(Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarX.exe" & Chr(34), "")
+                    cfg = td.Definition.Actions.ToString.Replace(Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarZ.exe" & Chr(34), "")
                 End If
 
                 Dim arguments() As String = cfg.Split(CType(" ", Char()))
@@ -604,9 +583,9 @@ Class MainWindow
         Try
             Using mts As TaskService = New TaskService()
 
-                Dim mtd = mts.GetTask("TaskbarX")
+                Dim mtd = mts.GetTask("TaskbarZ")
 
-                If mtd.Name = "TaskbarX" Then
+                If mtd.Name = "TaskbarZ" Then
                     Migrate()
                 End If
 
@@ -635,7 +614,7 @@ Class MainWindow
 
             Using ts As TaskService = New TaskService()
 
-                Dim td = ts.GetTask("TaskbarX")
+                Dim td = ts.GetTask("TaskbarZ")
 
 
                 Dim cfg As String = Nothing
@@ -643,10 +622,10 @@ Class MainWindow
 
 
                 If System.AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen") Then
-                    cfg = td.Definition.Actions.ToString.Replace("cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarX", "")
+                    cfg = td.Definition.Actions.ToString.Replace("cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarZ", "")
                     ''  cfg = td.Definition.Actions.ToString.Replace("explorer.exe taskbarx:", "")
                 Else
-                    cfg = td.Definition.Actions.ToString.Replace(System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarX.exe", "")
+                    cfg = td.Definition.Actions.ToString.Replace(System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarZ.exe", "")
                 End If
 
                 Dim arguments() As String = cfg.Split(CType(" ", Char()))
@@ -948,8 +927,8 @@ Class MainWindow
 
                 Try
                     Using ts2 As TaskService = New TaskService()
-                        ts2.RootFolder.DeleteTask("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
-                        ts2.RootFolder.DeleteTask("TaskbarX")
+                        ts2.RootFolder.DeleteTask("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
+                        ts2.RootFolder.DeleteTask("TaskbarZ")
                     End Using
                 Catch ex As Exception
                     ' MessageBox.Show(ex.Message)
@@ -981,11 +960,11 @@ Class MainWindow
                             td2.Actions.Add(New ExecAction("explorer.exe", "taskbarx:" & Chr(34) & parameters & Chr(34), Nothing))
                         Else
 
-                            td2.Actions.Add(New ExecAction(Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarX.exe" & Chr(34), parameters, Nothing))
+                            td2.Actions.Add(New ExecAction(Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarZ.exe" & Chr(34), parameters, Nothing))
 
                         End If
 
-                        ts2.RootFolder.RegisterTaskDefinition("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""), td2)
+                        ts2.RootFolder.RegisterTaskDefinition("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""), td2)
 
                     End Using
                 Catch ex As Exception
@@ -1004,7 +983,7 @@ Class MainWindow
 
         Try
             Using ts3 As TaskService = New TaskService()
-                ts3.RootFolder.DeleteTask("TaskbarX")
+                ts3.RootFolder.DeleteTask("TaskbarZ")
             End Using
         Catch ex As Exception
             ' MessageBox.Show(ex.Message)
@@ -1026,28 +1005,6 @@ Class MainWindow
     End Sub
 
     Public Sub Button_Click_1(sender As Object, e As RoutedEventArgs)
-
-        'Kill every other running instance of FalconX
-
-        Try
-            For Each prog As Process In Process.GetProcesses
-                If prog.ProcessName = "TaskbarX" Then
-                    prog.Kill()
-                End If
-            Next
-        Catch ex As Exception
-
-        End Try
-
-        System.Threading.Thread.Sleep(50)
-
-        Dim t1 As System.Threading.Thread = New System.Threading.Thread(AddressOf RevertToZero)
-        t1.Start()
-
-        System.Threading.Thread.Sleep(1000)
-
-
-
         Dim parameters As String = ""
 
         If RadioButton1.IsChecked = True Then
@@ -1176,8 +1133,8 @@ Class MainWindow
 
         Try
             Using ts As TaskService = New TaskService()
-                ts.RootFolder.DeleteTask("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
-                ts.RootFolder.DeleteTask("TaskbarX")
+                ts.RootFolder.DeleteTask("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
+                ts.RootFolder.DeleteTask("TaskbarZ")
             End Using
         Catch ex As Exception
             ' MessageBox.Show(ex.Message)
@@ -1216,13 +1173,13 @@ Class MainWindow
                     Process.Start(processInfo)
                 Else
 
-                    td.Actions.Add(New ExecAction(Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarX.exe" & Chr(34), parameters, Nothing))
+                    td.Actions.Add(New ExecAction(Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarZ.exe" & Chr(34), parameters, Nothing))
 
-                    System.Diagnostics.Process.Start("TaskbarX.exe", parameters)
+                    RestartWithSettings(parameters)
 
                 End If
 
-                ts.RootFolder.RegisterTaskDefinition("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""), td)
+                ts.RootFolder.RegisterTaskDefinition("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""), td)
 
             End Using
         Catch ex As Exception
@@ -1236,27 +1193,10 @@ Class MainWindow
     Public Shared WM_THEMECHANGED As Integer = &H31A
 
     Private Sub Button_Click_2(sender As Object, e As RoutedEventArgs)
-        'Kill every other running instance of FalconX
-
-        Try
-            For Each prog As Process In Process.GetProcesses
-                If prog.ProcessName = "TaskbarX" Then
-                    prog.Kill()
-                End If
-            Next
-        Catch
-        End Try
-
-        System.Threading.Thread.Sleep(50)
-
-
-
-        Dim t1 As System.Threading.Thread = New System.Threading.Thread(AddressOf RevertToZero)
-        t1.Start()
-
-
-
-        ' ResetTaskbarStyle()
+        Global.TaskbarX.Main.noty.Visible = False
+        Global.TaskbarX.TaskbarCenter.RevertToZero()
+        Global.TaskbarX.Main.ResetTaskbarStyle()
+        System.Environment.Exit(0)
     End Sub
 
 
@@ -1269,8 +1209,8 @@ Class MainWindow
     Private Async Sub Button_Click_3(sender As Object, e As RoutedEventArgs)
         Try
             Using ts As TaskService = New TaskService()
-                ts.RootFolder.DeleteTask("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
-                ts.RootFolder.DeleteTask("TaskbarX")
+                ts.RootFolder.DeleteTask("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
+                ts.RootFolder.DeleteTask("TaskbarZ")
             End Using
         Catch ex As Exception
             Console.WriteLine(ex.Message)
@@ -1416,8 +1356,8 @@ Class MainWindow
 
         Try
             Using ts As TaskService = New TaskService()
-                ts.RootFolder.DeleteTask("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
-                ts.RootFolder.DeleteTask("TaskbarX")
+                ts.RootFolder.DeleteTask("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
+                ts.RootFolder.DeleteTask("TaskbarZ")
             End Using
         Catch ex As Exception
             ' MessageBox.Show(ex.Message)
@@ -1449,11 +1389,11 @@ Class MainWindow
                     td.Actions.Add(New ExecAction("explorer.exe", "taskbarx: " & Chr(34) & parameters & Chr(34), Nothing))
                 Else
 
-                    td.Actions.Add(New ExecAction(System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarX.exe", parameters, Nothing))
+                    td.Actions.Add(New ExecAction(System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarZ.exe", parameters, Nothing))
 
                 End If
 
-                ts.RootFolder.RegisterTaskDefinition("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""), td)
+                ts.RootFolder.RegisterTaskDefinition("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""), td)
 
             End Using
         Catch ex As Exception
@@ -1480,32 +1420,7 @@ Class MainWindow
     End Sub
 
     Private Sub Button_Click_4(sender As Object, e As RoutedEventArgs)
-
-        Try
-            Dim address As String = "https://raw.githubusercontent.com/ChrisAnd1998/FalconX-Center-Taskbar/master/VERSION"
-            Dim client As WebClient = New WebClient With {
-                .CachePolicy = New System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore)
-            }
-            Dim reader As StreamReader = New StreamReader(client.OpenRead(address))
-
-            Dim latest = reader.ReadToEnd.ToString
-
-            If latest.Contains(Assembly.GetExecutingAssembly().GetName().Version.ToString()) Then
-                vers.Text = "You are up to date."
-            Else
-                If latest.Substring(0, 7).ToString.Replace(".", "") <= Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", "") Then
-                    vers.Text = "This is a Pre-Release! Unstable."
-                Else
-                    vers.Text = "Update " & latest.Substring(0, 7) & " is available!"
-                    Process.Start("https://chrisandriessen.nl/taskbarx")
-                End If
-
-            End If
-
-            reader.Dispose()
-            client.Dispose()
-        Catch
-        End Try
+        Process.Start("https://github.com/sub9k/TaskbarZ/releases")
     End Sub
 
     Private Sub Button_Click_5(sender As Object, e As RoutedEventArgs)
@@ -1513,18 +1428,18 @@ Class MainWindow
 
             Using ts As TaskService = New TaskService()
 
-                Dim td = ts.GetTask("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
+                Dim td = ts.GetTask("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
 
                 Dim cfg As String = Nothing
 
 
 
                 If System.AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen") Then
-                    ''cfg = td.Definition.Actions.ToString.Replace("cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarX", "")
+                    ''cfg = td.Definition.Actions.ToString.Replace("cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarZ", "")
                     cfg = td.Definition.Actions.ToString.Replace("explorer.exe taskbarx:", "")
 
                 Else
-                    cfg = td.Definition.Actions.ToString.Replace(System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarX.exe", "")
+                    cfg = td.Definition.Actions.ToString.Replace(System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarZ.exe", "")
                 End If
 
                 Dim arguments() As String = cfg.Split(CType(" ", Char()))
@@ -1722,8 +1637,8 @@ Class MainWindow
         Checkbox15.IsChecked = False
         Checkbox16.IsChecked = False
         checkboxconsole.IsChecked = False
-        NumericUpDown3.Text = "400"
-        NumericUpDown5.Text = "400"
+        NumericUpDown3.Text = "25"
+        NumericUpDown5.Text = "50"
         NumericUpDown7.Text = "0"
         NumericUpDown7_Copy.Text = "0"
         NumericUpDown7_Copy1.Text = "0"
@@ -1737,28 +1652,6 @@ Class MainWindow
     End Sub
 
     Private Sub Button_Click_7(sender As Object, e As RoutedEventArgs)
-
-        'Kill every other running instance of FalconX
-
-        Try
-            For Each prog As Process In Process.GetProcesses
-                If prog.ProcessName = "TaskbarX" Then
-                    prog.Kill()
-                End If
-            Next
-        Catch ex As Exception
-
-        End Try
-
-        System.Threading.Thread.Sleep(50)
-
-        Dim t1 As System.Threading.Thread = New System.Threading.Thread(AddressOf RevertToZero)
-        t1.Start()
-
-        System.Threading.Thread.Sleep(1000)
-
-        'ResetTaskbarStyle()
-
         Dim parameters As String = ""
 
         If RadioButton1.IsChecked = True Then
@@ -1891,7 +1784,7 @@ Class MainWindow
             }
             Process.Start(processInfo)
         Else
-            System.Diagnostics.Process.Start("TaskbarX.exe", parameters)
+            RestartWithSettings(parameters)
         End If
 
     End Sub
@@ -1899,8 +1792,8 @@ Class MainWindow
     Private Async Sub Button_Click_8(sender As Object, e As RoutedEventArgs)
 
         Dim deleteFileDialog As ContentDialog = New ContentDialog With {
-        .Title = "Uninstall TaskbarX?",
-        .Content = "Are you sure you want to uninstall TaskbarX?",
+        .Title = "Uninstall TaskbarZ?",
+        .Content = "Are you sure you want to uninstall TaskbarZ?",
         .PrimaryButtonText = "Yes",
         .CloseButtonText = "No"
     }
@@ -1909,8 +1802,8 @@ Class MainWindow
         If result = ContentDialogResult.Primary Then
             Try
                 Using ts As TaskService = New TaskService()
-                    ts.RootFolder.DeleteTask("TaskbarX" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
-                    ts.RootFolder.DeleteTask("TaskbarX")
+                    ts.RootFolder.DeleteTask("TaskbarZ" & " " & System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("\", ""))
+                    ts.RootFolder.DeleteTask("TaskbarZ")
                 End Using
             Catch ex As Exception
                 Console.WriteLine(ex.Message)
@@ -1918,7 +1811,7 @@ Class MainWindow
 
             Try
                 For Each prog As Process In Process.GetProcesses
-                    If prog.ProcessName = "TaskbarX" Then
+                    If prog.ProcessName = "TaskbarZ" Then
                         prog.Kill()
                     End If
                 Next
@@ -1934,7 +1827,7 @@ Class MainWindow
 
                 Dim ggFileDialog As ContentDialog = New ContentDialog With {
         .Title = "Good bye.",
-        .Content = "Ready for uninstall." & vbNewLine & "TaskbarX will be removed within a minute once you click Ok...",
+        .Content = "Ready for uninstall." & vbNewLine & "TaskbarZ will be removed within a minute once you click Ok...",
         .PrimaryButtonText = "Ok"
     }
                 Dim results As ContentDialogResult = Await ggFileDialog.ShowAsync()
@@ -1950,7 +1843,7 @@ Class MainWindow
 
                 Dim ffFileDialog As ContentDialog = New ContentDialog With {
       .Title = "Ready for removal.",
-      .Content = "The Taskschedule is successfully removed." & vbNewLine & "You can now remove TaskbarX's files.",
+      .Content = "The Taskschedule is successfully removed." & vbNewLine & "You can now remove TaskbarZ's files.",
       .PrimaryButtonText = "Ok"
   }
                 Dim results2 As ContentDialogResult = Await ffFileDialog.ShowAsync()
@@ -2389,10 +2282,10 @@ Class MainWindow
         End If
 
         If System.AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen") Then
-            '' TextboxLink.Text = "cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarX " & parameters
+            '' TextboxLink.Text = "cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarZ " & parameters
             TextboxLink.Text = "explorer.exe taskbarx:" & Chr(34) & parameters & Chr(34)
         Else
-            TextboxLink.Text = Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarX.exe" & Chr(34) & " " & parameters
+            TextboxLink.Text = Chr(34) & System.AppDomain.CurrentDomain.BaseDirectory & "TaskbarZ.exe" & Chr(34) & " " & parameters
         End If
 
     End Sub

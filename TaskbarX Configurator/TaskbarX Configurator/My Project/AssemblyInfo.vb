@@ -11,10 +11,10 @@ Imports System.Windows
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("TaskbarX Configurator")>
-<Assembly: AssemblyDescription("Configurator for TaskbarX")>
+<Assembly: AssemblyTitle("TaskbarZ")>
+<Assembly: AssemblyDescription("TaskbarZ taskbar engine and settings")>
 <Assembly: AssemblyCompany("Chris Andriessen")>
-<Assembly: AssemblyProduct("TaskbarX Configurator")>
+<Assembly: AssemblyProduct("TaskbarZ")>
 <Assembly: AssemblyCopyright("Copyright © Chris Andriessen 2021")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: ComVisible(false)>
@@ -55,5 +55,5 @@ Imports System.Windows
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.7.7.0")>
-<Assembly: AssemblyFileVersion("1.7.8.0")>
+<Assembly: AssemblyVersion("0.1.0.0")>
+<Assembly: AssemblyFileVersion("0.1.0.0")>
